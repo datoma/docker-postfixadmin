@@ -1,4 +1,3 @@
-# hardware/postfixadmin
 
 ![postfixadmin](http://i.imgur.com/UCtvKHR.png "postfixadmin")
 
@@ -47,7 +46,7 @@ PostfixAdmin is a web based interface used to manage mailboxes, virtual domains 
 | **QUOTA_MULTIPLIER** | Number of bytes required to represent a single quota unit. You can either use '1000000', '1024000' or '1048576' | *optional* | 1024000
 | **FETCHMAIL_EXTRA_OPTIONS** | Allows to pass additional options to fetchmail | *optional* | NO
 
-* If you use this docker image and [hardware/mailserver](https://github.com/hardware/mailserver) with fetchmail support enabled, a dedicated port (10025) is available with less restrictions for delivery. Use `FETCHMAIL_EXTRA_OPTIONS` environment variable for that purpose. Example :
+* If you use this docker image and [datoma/mailserver](https://github.com/datoma/docker-mailserver) with fetchmail support enabled, a dedicated port (10025) is available with less restrictions for delivery. Use `FETCHMAIL_EXTRA_OPTIONS` environment variable for that purpose. Example :
 
 ```yml
 postfixadmin:
@@ -75,4 +74,9 @@ postfixadmin:
 
 ### How to setup
 
-https://github.com/hardware/mailserver/wiki/Postfixadmin-initial-configuration
+Postfixadmin-initial-configuration.md
+
+## clones from
+
+hardware/postfixadmin
+

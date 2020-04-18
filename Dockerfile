@@ -1,7 +1,7 @@
-FROM alpine:3.10
+FROM alpine:3.11
 
 LABEL description "PostfixAdmin is a web based interface used to manage mailboxes" \
-      maintainer="Hardware <contact@meshup.net>"
+      maintainer="datoma - https://github.com/datoma"
 
 ARG VERSION=3.2
 
