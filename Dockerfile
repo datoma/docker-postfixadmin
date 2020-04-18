@@ -3,48 +3,21 @@ FROM alpine:3.11
 LABEL description "PostfixAdmin is a web based interface used to manage mailboxes" \
       maintainer="datoma - https://github.com/datoma"
 
-ARG VERSION=3.2
+ARG POSTFIXADMIN_VERSION=3.2.4
+ARG POSTFIXADMIN_SHA512=2bd7ae05addbaf3c6c7eebea16ec1e21b2c67c8e6161446ed82a9553c26c04e19c1ec9ce248a9b9df504df56d309590259e6f04907b04b593548028b40e40d47
+ENV POSTFIXADMIN_VERSION $POSTFIXADMIN_VERSION
+ENV POSTFIXADMIN_SHA512 $POSTFIXADMIN_SHA512
 
-# https://pgp.mit.edu/pks/lookup?search=0xC6A682EA63C82F1C&fingerprint=on&op=index
-# pub  4096R/63C82F1C 2005-10-06 Christian Boltz (www.cboltz.de) <gpg@cboltz.de>
-ARG GPG_SHORTID="0xC6A682EA63C82F1C"
-ARG GPG_FINGERPRINT="70CA A060 DE04 2AAE B1B1  5196 C6A6 82EA 63C8 2F1C"
-ARG SHA256_HASH="866d4c0ca870b2cac184e5837a4d201af8fcefecef09bc2c887a6e017a00cefe"
-
-RUN echo "@community https://nl.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories \
- && apk -U upgrade \
- && apk add -t build-dependencies \
-    ca-certificates \
-    gnupg \
- && apk add \
-    su-exec \
-    dovecot \
-    tini@community \
-    php7@community \
-    php7-phar \
-    php7-fpm@community \
-    php7-imap@community \
-    php7-pgsql@community \
-    php7-mysqli@community \
-    php7-session@community \
-    php7-mbstring@community \
- && cd /tmp \
- && PFA_TARBALL="postfixadmin-${VERSION}.tar.gz" \
- && wget -q https://downloads.sourceforge.net/project/postfixadmin/postfixadmin/postfixadmin-${VERSION}/${PFA_TARBALL} \
- && wget -q https://downloads.sourceforge.net/project/postfixadmin/postfixadmin/postfixadmin-${VERSION}/${PFA_TARBALL}.asc \
- && ( \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys ${GPG_SHORTID} || \
-    gpg --keyserver keyserver.pgp.com --recv-keys ${GPG_SHORTID} || \
-    gpg --keyserver pgp.mit.edu --recv-keys ${GPG_SHORTID} \
-    ) \
- && CHECKSUM=$(sha256sum ${PFA_TARBALL} | awk '{print $1}') \
- && if [ "${CHECKSUM}" != "${SHA256_HASH}" ]; then echo "ERROR: Checksum does not match!" && exit 1; fi \
- && FINGERPRINT="$(LANG=C gpg --verify ${PFA_TARBALL}.asc ${PFA_TARBALL} 2>&1 | sed -n "s#Primary key fingerprint: \(.*\)#\1#p")" \
- && if [ -z "${FINGERPRINT}" ]; then echo "ERROR: Invalid GPG signature!" && exit 1; fi \
- && if [ "${FINGERPRINT}" != "${GPG_FINGERPRINT}" ]; then echo "ERROR: Wrong GPG fingerprint!" && exit 1; fi \
- && mkdir /postfixadmin && tar xzf ${PFA_TARBALL} -C /postfixadmin && mv /postfixadmin/postfixadmin-$VERSION/* /postfixadmin \
- && apk del build-dependencies \
- && rm -rf /var/cache/apk/* /tmp/* /root/.gnupg /postfixadmin/postfixadmin-$VERSION*
+RUN echo "@community https://nl.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories; \
+    apk -U upgrade; \
+    apk add -t build-dependencies gnupg ca-certificates curl su-exec dovecot; \
+    apk add tini@community  php7@community php7-phar php7-fpm@community php7-imap@community php7-pgsql@community php7-mysqli@community php7-session@community php7-mbstring@community; \
+    curl -fsSL -o postfixadmin.tar.gz "https://github.com/postfixadmin/postfixadmin/archive/postfixadmin-${POSTFIXADMIN_VERSION}.tar.gz"; \
+    echo "$POSTFIXADMIN_SHA512 *postfixadmin.tar.gz" | sha512sum -c -; \
+    mkdir /postfixadmin && tar xzf postfixadmin.tar.gz -C /postfixadmin; \
+    mkdir -p /postfixadmin/templates_c; \
+    apk del build-dependencies; \
+    rm -rf /var/cache/apk/* /tmp/* /root/.gnupg /postfixadmin/postfixadmin-$VERSION*
 
 COPY bin /usr/local/bin
 RUN chmod +x /usr/local/bin/*
