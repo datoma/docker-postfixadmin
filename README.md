@@ -76,7 +76,7 @@ postfixadmin:
 
 Postfixadmin-initial-configuration.md
 
-## clones from
+## cloned from
 
 hardware/postfixadmin
-
+https://hub.docker.com/r/hardware/postfixadmin/
