@@ -16,6 +16,7 @@ RUN echo "@community https://nl.alpinelinux.org/alpine/v3.10/community" >> /etc/
     echo "$POSTFIXADMIN_SHA512 *postfixadmin.tar.gz" | sha512sum -c -; \
     mkdir /postfixadmin && tar xzf postfixadmin.tar.gz -C /postfixadmin; \
     mkdir -p /postfixadmin/templates_c; \
+    mkdir -p /postfixadmin/public; \
     apk del build-dependencies; \
     rm -rf /var/cache/apk/* /tmp/* /root/.gnupg /postfixadmin/postfixadmin-$VERSION*
 
