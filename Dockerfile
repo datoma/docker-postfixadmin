@@ -10,8 +10,8 @@ ENV POSTFIXADMIN_SHA512 $POSTFIXADMIN_SHA512
 
 RUN echo "@community https://nl.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories; \
     apk -U upgrade; \
-    apk add -t build-dependencies gnupg ca-certificates curl su-exec dovecot; \
-    apk add tini@community  php7@community php7-phar php7-fpm@community php7-imap@community php7-pgsql@community php7-mysqli@community php7-session@community php7-mbstring@community; \
+    apk add -t build-dependencies gnupg ca-certificates; \
+    apk add tini@community curl su-exec dovecot php7@community php7-phar php7-fpm@community php7-imap@community php7-pgsql@community php7-mysqli@community php7-session@community php7-mbstring@community; \
     curl -fsSL -o postfixadmin.tar.gz "https://github.com/postfixadmin/postfixadmin/archive/postfixadmin-${POSTFIXADMIN_VERSION}.tar.gz"; \
     echo "$POSTFIXADMIN_SHA512 *postfixadmin.tar.gz" | sha512sum -c -; \
     mkdir /postfixadmin && tar xzf postfixadmin.tar.gz -C /postfixadmin; \
